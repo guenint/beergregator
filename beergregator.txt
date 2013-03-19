@@ -1,6 +1,6 @@
-BeerGregator
+BeerGregator - Dhruv Maheshwari, Teddy Guenin
 
-This will be a python application that takes a trip between two locations and outputs the most popular craft beers to drink on the route based on location, beer style, and beer availability.
+This will be a python application that takes a trip between two locations and outputs the most popular craft beers to drink on the route based on location, beer style, and beer availability. We will then turn it into a Django-based web app with potential commenting and login/user history.
 
 This app will use:
 	BreweryDB API for information on a beer; JSON format
@@ -8,7 +8,7 @@ This app will use:
 	List of cities' longitudes and latitudes
 	Untappd API for ratings
 
-What is not in these frameworks, and what I will be doing:
+What is not in these frameworks, and what we will be doing:
 
 	Generate easy entry method: Type in two cities and style of beer, and the program will generate a top 10 list of beers on the trip between using 10 evenly spaced locations on the trip between.
 
@@ -18,8 +18,10 @@ What is not in these frameworks, and what I will be doing:
 
 Goals:
 
-	To get a better understanding of how to use and parse APIs to achieve a good result. This application will use three APIs, so the trick is having it be efficient.
+	To get a better understanding of how to use and parse APIs to achieve a good result. This application will use three APIs, so the trick is having it be efficient. Also, creating a web app that looks good from scratch in Django will be complex and will give us good practice in frameworks.
 
 Optional:
 
-	Keep persistent storage and be able to show user history
+	1. Comment board to give recommendations to other users
+	2. Keep persistent storage and be able to show user history
+
