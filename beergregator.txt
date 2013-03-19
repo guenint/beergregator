@@ -23,12 +23,3 @@ Goals:
 Optional:
 
 	Keep persistent storage and be able to show user history
-
-BreweryDB api key: 079a83fb33046c975a4ff3475f1a4062
-BeerMapping api key: f7ce255aab176f13fb9ae1c5504094d3
-
-
-Untappd:
-
-GET beer info:
-/v4/beer/info/BID
