@@ -1,0 +1,34 @@
+BeerGregator
+
+This will be a python application that takes a trip between two locations and outputs the most popular craft beers to drink on the route based on location, beer style, and beer availability.
+
+This app will use:
+	BreweryDB API for information on a beer; JSON format
+	BeerMapping API for locations to get beer & breweries; JSON format
+	List of cities' longitudes and latitudes
+	Untappd API for ratings
+
+What is not in these frameworks, and what I will be doing:
+
+	Generate easy entry method: Type in two cities and style of beer, and the program will generate a top 10 list of beers on the trip between using 10 evenly spaced locations on the trip between.
+
+	Alternatively, you could enter an existing beer and two cities, and it will find top beers similar to to the existing one based on style and brewery location
+
+	Python will be written to ignore "macrobrews" from the API and focus on smaller, craft beers
+
+Goals:
+
+	To get a better understanding of how to use and parse APIs to achieve a good result. This application will use three APIs, so the trick is having it be efficient.
+
+Optional:
+
+	Keep persistent storage and be able to show user history
+
+BreweryDB api key: 079a83fb33046c975a4ff3475f1a4062
+BeerMapping api key: f7ce255aab176f13fb9ae1c5504094d3
+
+
+Untappd:
+
+GET beer info:
+/v4/beer/info/BID
