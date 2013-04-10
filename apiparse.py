@@ -58,8 +58,8 @@ def google_second():
 		print route['summary']
 		for leg in route['legs']:
 		    print 'Start: %s @ %s' % (leg['start_address'], leg['start_location'])
-	        print 'End: %s @ %s' % (leg['end_address'], leg['end_location'])
-	        print 'Distance: %s and Duration: %s' % (leg['distance'], leg['duration'])
+		    print 'End: %s @ %s' % (leg['end_address'], leg['end_location'])
+		    print 'Distance: %s and Duration: %s' % (leg['distance'], leg['duration'])
 	for route in results['routes']:
 	    for leg in route['legs']:
 	        for step in leg['steps']:
