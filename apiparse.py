@@ -6,6 +6,7 @@ import requests
 from urllib2 import urlopen
 import simplejson
 from googlemaps import GoogleMaps
+from brewerydb import *
 
 
 #parse through APIs
@@ -13,21 +14,7 @@ from googlemaps import GoogleMaps
 brewerydb_auth = "079a83fb33046c975a4ff3475f1a4062"
 beermapping_auth = "f7ce255aab176f13fb9ae1c5504094d3"
 googlemaps_auth = "AIzaSyDELBXcYoUwiQQl-4us8UbG9hL7_iiMJug"
-breweryURL = "http://api.brewerydb.com/v2/?key=079a83fb33046c975a4ff3475f1a4062"
-beermappingURL = "http://beermapping.com/webservice/locquery/f7ce255aab176f13fb9ae1c5504094d3/"
 
-def twitter_test():
-	url = "http://api.twitter.com/1/statuses/user_timeline.json?screen_name=python"
-	data = json.load(urllib2.urlopen(url))
-	print data
-
-
-
-#load json format
-def load_json(URL):
-	openURL = urllib.urlopen(URL)
-	jsonURL = json.loads(openURL.read())
-	return pprint.pprint(jsonURL)
 
 #add terms to url test_brewerydb API connection
 def add_terms(*args):
@@ -39,10 +26,16 @@ def add_terms(*args):
 		lis[key] = modified + "/"
 	return "".join(lis)
 
+def all_beers():
+#	jsonout = BreweryDb.beers()
+	jsonout2 = BreweryDb.search({'type':'beer','q':'unibroue'})
+	pprint.pprint(jsonout2)
+
 #testing BreweryDB API connection
 def test_brewerydb(*args):
 	addition = add_terms(*args)
 	url = "http://api.brewerydb.com/v2/" + addition + "?key=" + brewerydb_auth
+	print url
 	data = json.load(urllib2.urlopen(url))
 	return pprint.pprint(data)
 
