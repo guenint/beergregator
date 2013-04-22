@@ -94,7 +94,7 @@ def aggregate_types(brewlist):
 		for key, lis in brews.iteritems():
 			for beer in lis:
 				full[key].append(beer)
-	print sorted(full.iteritems(), key=lambda value: len(value[1]), reverse = True)
+	return sorted(full.iteritems(), key=lambda value: len(value[1]), reverse = True)
 
 
 # def localize(fname="breweries.csv", city, state):
