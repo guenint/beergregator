@@ -5,8 +5,10 @@ import pprint
 import requests
 from urllib2 import urlopen
 import simplejson
+from collections import defaultdict
 from googlemaps import GoogleMaps
 from brewerydb import *
+from collections import Counter
 
 
 #parse through APIs
@@ -27,9 +29,11 @@ def add_terms(*args):
 	return "".join(lis)
 
 def all_beers():
-#	jsonout = BreweryDb.beers()
-	jsonout2 = BreweryDb.search({'type':'beer','q':'unibroue'})
-	pprint.pprint(jsonout2)
+	BreweryDb.configure("079a83fb33046c975a4ff3475f1a4062")
+	jsonout = BreweryDb.beer("oeGSxs")
+	jsonout2 = BreweryDb.styles()
+	jsonout3 = BreweryDb.breweries()
+	pprint.pprint(jsonout3)
 
 #testing BreweryDB API connection
 def test_brewerydb(*args):
@@ -39,32 +43,61 @@ def test_brewerydb(*args):
 	data = json.load(urllib2.urlopen(url))
 	return pprint.pprint(data)
 
-#testing beermapping API connection
-def test_beermapping(typ, spec):
-	type1 = str(typ)
-	spec1 = str(spec)
-	url = "http://beermapping.com/webservice/" + type1 + "/" + beermapping_auth + "/" + spec1
-	print url
-	data = json.load(urllib2.urlopen(url))
-	return pprint.pprint(data)
 
-#testing google maps API connection
-def google_second():
-	googleapi = 'http://maps.googleapis.com/maps/api/directions/json'
-	origin = 'Bellflower,CA'
-	destination = 'Austin,TX'
-	url = '%s?origin=%s&destination=%s&sensor=false' % (googleapi, origin, destination)
-	request = urlopen(url)
-	results = simplejson.load(request)
-	print results.keys()
-	print results['status']
-	for route in results['routes']:
-		print route['summary']
-		for leg in route['legs']:
-		    print 'Start: %s @ %s' % (leg['start_address'], leg['start_location'])
-		    print 'End: %s @ %s' % (leg['end_address'], leg['end_location'])
-		    print 'Distance: %s and Duration: %s' % (leg['distance'], leg['duration'])
-	for route in results['routes']:
-	    for leg in route['legs']:
-	        for step in leg['steps']:
-	            print step['html_instructions'].decode('unicode-escape')
+def load_csv(fname):
+    breweries = []
+    fields = ["brewery","id","city","state"]
+    for line in open(fname, 'rU'):
+        brewline = line.split('|')
+        brew = {}
+        for key, attribute in enumerate(brewline):
+        	if fields[key] != "id":
+        		attribute = attribute.strip()
+        		brew[fields[key]] = attribute
+        breweries.append(brew)
+    return breweries
+
+def match_db(fname):
+	breweries = load_csv(fname)
+	for brewery in breweries:
+		name = brewery["brewery"]
+		modified = name.strip().replace(' ', '+')
+		url = "http://api.brewerydb.com/v2/search?key=" + brewerydb_auth + "&q=" + modified
+		fileload = json.load(urllib2.urlopen(url))
+#		print fileload["data"]
+		if len(fileload) > 2:
+			data = fileload["data"][0]
+			print name + "|" + data["id"] + "|" + brewery["city"] + "|" + brewery["state"]
+			brewery["id"] = data["id"]
+		else:
+			print name + "|" + "None" + "|" + brewery["city"] + "|" + brewery["state"]
+			brewery["id"] = None
+	return breweries
+
+
+def output_types(brewid):
+	stylerawlist = defaultdict(list)
+	url = "http://api.brewerydb.com/v2/brewery/" + brewid + "/beers/?key=" + brewerydb_auth
+	fileload = json.load(urllib2.urlopen(url))
+	if len(fileload) > 2:
+		allbeers = fileload["data"]
+		for beer in allbeers:
+			if "style" in beer.keys():
+				stylerawlist[beer["style"]["name"]].append(beer["name"])
+	return stylerawlist
+
+
+def aggregate_types(brewlist):
+	full = defaultdict(list)
+	for brewery in brewlist:
+		brews = output_types(brewery)
+		for key, lis in brews.iteritems():
+			for beer in lis:
+				full[key].append(beer)
+	print sorted(full.iteritems(), key=lambda value: len(value[1]), reverse = True)
+
+
+# def localize(fname="breweries.csv", city, state):
+# 	breweries = load_csv(fname)
+# 	for brewery in breweries:
+# 		brewid = brewery["id"]
