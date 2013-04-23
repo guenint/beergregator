@@ -125,11 +125,8 @@ def get_brews(lat, lon, radius):
 		brewline = line.split('|')
 		point2 = geopy.Point(brewline[4], brewline[5])
 		dist = geopy.distance.distance(point1, point2).km
-		print str(dist) + "," + str(radius)
 		if dist < float(radius):
-			print brewline[1]
 			brewlist.append(brewline[1])
-	print brewlist
 	return aggregate_types(brewlist)
 
 # def localize(fname="breweries.csv", city, state):
