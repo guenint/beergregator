@@ -86,7 +86,7 @@ def init_db():
 @app.route('/', methods = ['GET', 'POST'])
 def show_users():
     print "hello"
-   # cur = g.db.execute('select username, password from users order by id desc')
+# cur = g.db.execute('select username, password from users order by id desc')
 #    users = [dict(username=row[0], password=row[1]) for row in cur.fetchall()]
 #    print users
     users = []
@@ -101,7 +101,7 @@ def show_beers():
         beers = apiparse.get_brews(40, 40, 100)
     else:
         beers = apiparse.get_brews(location[0], location[1], 100)
-   print beers
+    print beers
     to_display = []
     for beer in beers:
         category, specific = beer
