@@ -1,10 +1,17 @@
-body            { font-family: sans-serif; background: #eee; }
-a, h1, h2       { color: #377BA8; }
-h1, h2          { font-family: 'Georgia', serif; margin: 0; }
-h1              { border-bottom: 2px solid #eee; }
-h2              { font-size: 1.2em; }
-.page           { margin: 2em auto; width: 35em; border: 5px solid #ccc;
-                      padding: 0.8em; background: white; }
+body            { font-family: sans-serif; 
+					background-image:url('grid.png');
+					background-repeat:repeat; }
+a, h2       { color: #377BA8; }
+
+h2          { font-family: 'Quicksand';
+				font-size: 3em;
+				text-align: center}
+				
+h1              {  font-family: 'Londrina Shadow';
+					font-size: 8em;
+					text-align: center }
+.page           { margin: 2em auto; width: 35em;
+                      padding: 0.8em; }
 .users        { list-style: none; margin: 0; padding: 0; }
 .users li     { margin: 0.8em 1.2em; }
 .users li h2  { margin-left: -1em; }
@@ -13,3 +20,14 @@ h2              { font-size: 1.2em; }
 .metanav        { text-align: right; font-size: 0.8em; padding: 0.3em; margin-bottom: 1em; background: #fafafa; }
 .flash          { background: #CEE5F5; padding: 0.5em; border: 1px solid #AACBE2; }
 .error          { background: #F0D6D6; padding: 0.5em; }
+.text-input {font-size: 3em;
+				}
+.submit {	margin-top: 20px;
+			font-size: 2em;
+			margin-left: 95px;
+			width: 300px;
+			background: white;
+			}
+			
+.submit:hover {	background: #377BA8;
+			}
