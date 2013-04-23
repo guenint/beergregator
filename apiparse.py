@@ -89,15 +89,25 @@ def match_db(fname):
 
 def output_types(brewid):
 	stylerawlist = defaultdict(list)
-	url = "http://api.brewerydb.com/v2/brewery/" + brewid + "/beers/?key=" + brewerydb_auth
-	fileload = json.load(urllib2.urlopen(url))
-	if len(fileload) > 2:
-		allbeers = fileload["data"]
-		for beer in allbeers:
-			if "style" in beer.keys():
-				stylerawlist[beer["style"]["name"]].append(beer["name"])
+	if check_brewery(brewid):
+		url = "http://api.brewerydb.com/v2/brewery/" + brewid + "/beers/?key=" + brewerydb_auth
+		fileload = json.load(urllib2.urlopen(url))
+		if len(fileload) == 1:
+			return None
+		if len(fileload) > 2:
+			allbeers = fileload["data"]
+			for beer in allbeers:
+				if "style" in beer.keys():
+					stylerawlist[beer["style"]["name"]].append(beer["name"])
 	return stylerawlist
 
+def check_brewery(brewid):
+	try:
+		url = "http://api.brewerydb.com/v2/brewery/" + brewid + "/beers/?key=" + brewerydb_auth
+		fileload = json.load(urllib2.urlopen(url))
+	except urllib2.HTTPError:
+		return False
+	return True
 
 def aggregate_types(brewlist):
 	full = defaultdict(list)
@@ -117,7 +127,9 @@ def get_brews(lat, lon, radius):
 		dist = geopy.distance.distance(point1, point2).km
 		print str(dist) + "," + str(radius)
 		if dist < float(radius):
+			print brewline[1]
 			brewlist.append(brewline[1])
+	print brewlist
 	return aggregate_types(brewlist)
 
 # def localize(fname="breweries.csv", city, state):
