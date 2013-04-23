@@ -86,7 +86,7 @@ def init_db():
 @app.route('/')
 def show_users():
     print "hello"
-    cur = g.db.execute('select username, password from users order by id desc')
+   # cur = g.db.execute('select username, password from users order by id desc')
     print "hello3"
     users = [dict(username=row[0], password=row[1]) for row in cur.fetchall()]
     print users
