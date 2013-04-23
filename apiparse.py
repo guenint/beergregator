@@ -3,7 +3,6 @@ import urllib2
 import json
 import pprint
 import requests
-from bs4 import BeautifulSoup
 from urllib2 import urlopen
 import simplejson
 from collections import defaultdict
