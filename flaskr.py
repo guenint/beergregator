@@ -97,7 +97,8 @@ def show_users():
 @login_required
 def show_beers():
     location = request.form['lat'], request.form['lon']
-    beers = apiparse.aggregate_types(["lV8gC4","3A5MHE","WXBFIy","lV8gC4","lAcrbq","iBzEfC"])
+    beers = apiparse.get_brews(location[0], location[1], 100)
+    print beers
     to_display = []
     for beer in beers:
         category, specific = beer

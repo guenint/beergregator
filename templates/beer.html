@@ -39,7 +39,9 @@ google.maps.event.addDomListener(window, 'load', initialize);
                 {% for name in categories.types %}
                 <li> {{ name }}
                 {% endfor %}
-            {% endfor %}
+            {% else %}
+            <h2> No beers in this area. Sorry. </h2>
+                        {% endfor %}
         </ul>
 {% endblock %}
 </html>
