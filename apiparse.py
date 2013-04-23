@@ -32,6 +32,7 @@ def add_terms(*args):
 		lis[key] = modified + "/"
 	return "".join(lis)
 
+#test cases for BreweryDB API
 def all_beers():
 	jsonout = BreweryDb.beer("oeGSxs")
 	BreweryDb.configure("079a83fb33046c975a4ff3475f1a4062")
@@ -39,7 +40,7 @@ def all_beers():
 	jsonout3 = BreweryDb.breweries()
 	pprint.pprint(jsonout3)
 
-#testing BreweryDB API connection
+#testing BreweryDB API connection using manual add_terms method
 def test_brewerydb(*args):
 	addition = add_terms(*args)
 	url = "http://api.brewerydb.com/v2/" + addition + "?key=" + brewerydb_auth
@@ -47,7 +48,8 @@ def test_brewerydb(*args):
 	data = json.load(urllib2.urlopen(url))
 	return pprint.pprint(data)
 
-
+#used in the web crawl for breweries, splits and organizes information 
+#on the breweries to make the CSV
 def load_csv(fname):
     breweries = []
     fields = ["brewery","id","city","state","lat","long"]
@@ -61,7 +63,7 @@ def load_csv(fname):
         breweries.append(brew)
     return breweries
 
-
+#tests the alignment of BreweryDB database with my own web-generated database
 def match_db(fname):
 	breweries = load_csv(fname)
 	for brewery in breweries:
@@ -86,7 +88,7 @@ def match_db(fname):
 			brewery["id"] = None
 	return breweries
 
-
+#returns the types and names of beers for a specific brewery
 def output_types(brewid):
 	stylerawlist = defaultdict(list)
 	if check_brewery(brewid):
@@ -101,6 +103,7 @@ def output_types(brewid):
 					stylerawlist[beer["style"]["name"]].append(beer["name"])
 	return stylerawlist
 
+#checks to see if ID corresponds with a brewery
 def check_brewery(brewid):
 	try:
 		url = "http://api.brewerydb.com/v2/brewery/" + brewid + "/beers/?key=" + brewerydb_auth
@@ -109,6 +112,8 @@ def check_brewery(brewid):
 		return False
 	return True
 
+#returns an ordered list of types of beer and individual beer names
+#by frequency given the list of breweries inputted
 def aggregate_types(brewlist):
 	full = defaultdict(list)
 	for brewery in brewlist:
@@ -118,6 +123,7 @@ def aggregate_types(brewlist):
 				full[key].append(beer)
 	return sorted(full.iteritems(), key=lambda value: len(value[1]), reverse = True)
 
+#main method, returns top beers in a specific radius around a given lat, lon
 def get_brews(lat, lon, radius):
 	brewlist = []
 	point1 = geopy.Point(lat, lon)
@@ -128,8 +134,3 @@ def get_brews(lat, lon, radius):
 		if dist < float(radius):
 			brewlist.append(brewline[1])
 	return aggregate_types(brewlist)
-
-# def localize(fname="breweries.csv", city, state):
-# 	breweries = load_csv(fname)
-# 	for brewery in breweries:
-# 		brewid = brewery["id"]
