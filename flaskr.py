@@ -90,8 +90,9 @@ def show_users():
     print "hello3"
 #    users = [dict(username=row[0], password=row[1]) for row in cur.fetchall()]
 #    print users
+    users = []
     print "hello2"
-    return render_template('index.html', users=None)
+    return render_template('index.html', users=users)
 
 @app.route('/show_beers', methods=['GET', 'POST'])
 @login_required
