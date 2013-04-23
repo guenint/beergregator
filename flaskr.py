@@ -42,8 +42,8 @@ class Beer_Category():
 #   return user_names
 
 USERS = {
-    1: User(u"Noth", u"pass", 1),
-    2: User(u"Steve", u"pass", 2),
+    1: User(u"Dhruv", u"pass", 1),
+    2: User(u"Teddy", u"pass", 2),
     3: User(u"Creeper",u"pass", 3, False),
 }
 
@@ -83,23 +83,25 @@ def init_db():
         db.commit()
     print "db closed"
 
-@app.route('/')
+@app.route('/', methods = ['GET', 'POST'])
 def show_users():
     print "hello"
    # cur = g.db.execute('select username, password from users order by id desc')
-    print "hello3"
 #    users = [dict(username=row[0], password=row[1]) for row in cur.fetchall()]
 #    print users
     users = []
-    print "hello2"
-    return render_template('index.html', users=users)
+    print len(users)
+    return render_template('index.html')
 
 @app.route('/show_beers', methods=['GET', 'POST'])
 @login_required
 def show_beers():
     location = request.form['lat'], request.form['lon']
-    beers = apiparse.get_brews(location[0], location[1], 100)
-    print beers
+    if location is None,None:
+        beers = apiparse.get_brews(40, 40, 100)
+    else:
+        beers = apiparse.get_brews(location[0], location[1], 100)
+   print beers
     to_display = []
     for beer in beers:
         category, specific = beer
