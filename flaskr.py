@@ -88,10 +88,10 @@ def show_users():
     print "hello"
    # cur = g.db.execute('select username, password from users order by id desc')
     print "hello3"
-    users = [dict(username=row[0], password=row[1]) for row in cur.fetchall()]
-    print users
+#    users = [dict(username=row[0], password=row[1]) for row in cur.fetchall()]
+:#    print users
     print "hello2"
-    return render_template('index.html', users=users)
+    return render_template('index.html', users=None)
 
 @app.route('/show_beers', methods=['GET', 'POST'])
 @login_required
@@ -172,7 +172,7 @@ def logout():
     flash('You were logged out')
     return redirect(url_for('show_users'))
 
-@app.before_request
+"""@app.before_request
 def before_request():
     print "before_request"
     g.db = connect_db()
@@ -181,7 +181,7 @@ def before_request():
 def teardown_request(exception):
     print "after_request"
     g.db.close()
-
+"""
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
 
