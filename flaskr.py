@@ -96,15 +96,13 @@ def show_users():
 @app.route('/show_beers', methods=['GET', 'POST'])
 @login_required
 def show_beers():
-    lat = request.form['lat']
-    lon = request.form['lon']
-    location = lat,lon
+    location = request.form['lat'], request.form['lon']
     beers = apiparse.aggregate_types(["lV8gC4","3A5MHE","WXBFIy","lV8gC4","lAcrbq","iBzEfC"])
     to_display = []
     for beer in beers:
         category, specific = beer
         to_display.append(Beer_Category(category, specific))
-    return render_template('beer.html', to_display=to_display, location=location)
+    return render_template('beer.html', to_display=to_display[0:5], location=location)
 
 @app.route('/adduser', methods=['POST'])
 def add_user():
