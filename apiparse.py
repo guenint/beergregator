@@ -3,12 +3,16 @@ import urllib2
 import json
 import pprint
 import requests
+from bs4 import BeautifulSoup
 from urllib2 import urlopen
 import simplejson
 from collections import defaultdict
 from googlemaps import GoogleMaps
 from brewerydb import *
 from collections import Counter
+from geopy import geocoders  
+import geopy
+import geopy.distance
 
 
 #parse through APIs
@@ -29,8 +33,8 @@ def add_terms(*args):
 	return "".join(lis)
 
 def all_beers():
-	BreweryDb.configure("079a83fb33046c975a4ff3475f1a4062")
 	jsonout = BreweryDb.beer("oeGSxs")
+	BreweryDb.configure("079a83fb33046c975a4ff3475f1a4062")
 	jsonout2 = BreweryDb.styles()
 	jsonout3 = BreweryDb.breweries()
 	pprint.pprint(jsonout3)
@@ -46,7 +50,7 @@ def test_brewerydb(*args):
 
 def load_csv(fname):
     breweries = []
-    fields = ["brewery","id","city","state"]
+    fields = ["brewery","id","city","state","lat","long"]
     for line in open(fname, 'rU'):
         brewline = line.split('|')
         brew = {}
@@ -57,6 +61,7 @@ def load_csv(fname):
         breweries.append(brew)
     return breweries
 
+
 def match_db(fname):
 	breweries = load_csv(fname)
 	for brewery in breweries:
@@ -64,11 +69,18 @@ def match_db(fname):
 		modified = name.strip().replace(' ', '+')
 		url = "http://api.brewerydb.com/v2/search?key=" + brewerydb_auth + "&q=" + modified
 		fileload = json.load(urllib2.urlopen(url))
-#		print fileload["data"]
 		if len(fileload) > 2:
 			data = fileload["data"][0]
-			print name + "|" + data["id"] + "|" + brewery["city"] + "|" + brewery["state"]
-			brewery["id"] = data["id"]
+			g = geocoders.GeoNames()
+			code = g.geocode("" + brewery["city"] + ", " + brewery["state"], exactly_one = False)
+			if len(code) > 1:
+				place, (lat, lon) = code[0]
+				print name + "|" + data["id"] + "|" + brewery["city"] + "|" + brewery["state"] + "|" + str(lat) + "|" + str(lon)
+				brewery["id"] = data["id"]
+			elif len(code) == 1:
+				place, (lat, lon) = g.geocode("" + brewery["city"] + ", " + brewery["state"])
+				print name + "|" + data["id"] + "|" + brewery["city"] + "|" + brewery["state"] + "|" + str(lat) + "|" + str(lon)
+				brewery["id"] = data["id"]
 		else:
 			print name + "|" + "None" + "|" + brewery["city"] + "|" + brewery["state"]
 			brewery["id"] = None
@@ -96,6 +108,17 @@ def aggregate_types(brewlist):
 				full[key].append(beer)
 	return sorted(full.iteritems(), key=lambda value: len(value[1]), reverse = True)
 
+def get_brews(lat, lon, radius):
+	brewlist = []
+	point1 = geopy.Point(lat, lon)
+	for line in open("breweries.csv", 'rU'):
+		brewline = line.split('|')
+		point2 = geopy.Point(brewline[4], brewline[5])
+		dist = geopy.distance.distance(point1, point2).km
+		print str(dist) + "," + str(radius)
+		if dist < float(radius):
+			brewlist.append(brewline[1])
+	return aggregate_types(brewlist)
 
 # def localize(fname="breweries.csv", city, state):
 # 	breweries = load_csv(fname)
