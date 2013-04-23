@@ -97,7 +97,7 @@ def show_users():
 @login_required
 def show_beers():
     location = request.form['lat'], request.form['lon']
-    if location is None,None:
+    if location == (None,None):
         beers = apiparse.get_brews(40, 40, 100)
     else:
         beers = apiparse.get_brews(location[0], location[1], 100)
