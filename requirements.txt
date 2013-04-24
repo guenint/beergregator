@@ -9,3 +9,46 @@ gunicorn==0.17.2
 requests==1.2.0
 simplejson==3.1.3
 wsgiref==0.1.2
+
+BeerGregator (c) 2013 Teddy Guenin, Dhruv Maheshwari
+Unique features:
+    Application able to take a latitude and longitude coordinate and will display the top beers for the region encompassing a circle of 100 miles around it.
+     
+     Done in: Flask, Python
+     External APIs used: GeoPY’s Google Maps, BreweryDB
+      
+      Data procurement methods: The list of breweries under breweries.csv was obtained through a web crawl of ratebeer.com, and through the method match_db in the main file apiparse.py, this database was matched with BreweryDB’s local database. Any duplicates or single entries (only appears in one database) were removed. City and state were obtained through the web crawl, and the brewery ID number was obtained by BreweryDB’s system. The latitude and longitude coordinates were claimed by GeoPY for each city/state combination. Using the breweryID and parsing through the BreweryDB data, we were able to obtain types and names of beers for each brewery if they were listed. 
+        This method (importing all into one big file) was preferable to making two API calls in the same method to two separate places, so that’s the reason we included and imported all of that data. Then, all we would have to do is cycle through breweries.csv for latitude and longitude coordinates, and use the BreweryDB API to get the beer information. This is O(n) + API call time. 
+
+        Flask Information: We used Flask as the backend for the API. The main sophistication for the backend was implementing a login system, for which we used the Flask-Login class. For many iterations of the project, not included in the current code, there was a database functionality, which helped store various information inputted by the user. However, we had issues actually getting the Flask-Login to work with the database, so for now we’ve commented out the database parts, and hard-coded in usernames and passwords for login. In order to serve the pages, we created a few .html files in the templates file as well as a CSS file for style. 
+
+
+    Further Implementation Plans: Finish out Database so that new users can be added easily. Implement current-location finder in the front-end, so that the front page is beer based on users current location. In addition, we'd like to change the inputs to a zipcode or latitude/longitude function.
+
+The program can be accessed on Heroku - http://frozen-mountain-8599.herokuapp.com/
+In order to run the program, we currently have it configured so that the database needs to be initialized:
+
+    python
+    >> import flaskr
+    >> flaskr.init_db()
+
+    and then from cmd line:
+    $ python flaskr.py
+    This will cause the program to run on local host 0.0.0.0:5000/
+    We recommend beginning by accessing 0.0.0.0:5000/login
+
+
+    Usernames that work:
+    username: Dhruv
+    password: pass
+
+    username: Teddy
+    password: pass
+
+    username: Creeper
+    password: pass
+
+    Good tests: 
+    LAT: 30 LON: -90
+    LAT: 35 LON: -80
+    LAT: 35 LON: -120

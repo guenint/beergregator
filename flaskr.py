@@ -23,24 +23,6 @@ class Beer_Category():
         self.name = name
         self.types = types
 
-
-#def get_users_from_file(filename):
-#    user_names = {}
-#    with open(filename, 'r') as f:
-#        for line in f:
-#            print line
-#            i = 1
-#            values = line.rsplit(',')
-#           print values
-#           if len(values) > 2:
-#               u = User(values[1], values[2], int(values[0]))
-#                USERS[i]=(u)
-#                user_names[u.name] = u;
-#            i +=1
-#        f.close()
-#        print user_names
-#   return user_names
-
 USERS = {
     1: User(u"Dhruv", u"pass", 1),
     2: User(u"Teddy", u"pass", 2),
@@ -48,9 +30,6 @@ USERS = {
 }
 
 USER_NAMES = dict((u.name, u) for u in USERS.itervalues())
-
-#USER_NAMES = get_users_from_file("users.txt")
-
 
 #configuration
 DATABASE = '/tmp/users.db'
@@ -71,26 +50,17 @@ def load_user(id):
 
 login_manager.setup_app(app)
 
-
 def connect_db():
     return sqlite3.connect(app.config['DATABASE'])
 
 def init_db():
-    print "hello db"
     with closing(connect_db()) as db:
         with app.open_resource('schema.sql') as f:
             db.cursor().executescript(f.read())
         db.commit()
-    print "db closed"
 
 @app.route('/', methods = ['GET', 'POST'])
 def show_users():
-    print "hello"
-# cur = g.db.execute('select username, password from users order by id desc')
-#    users = [dict(username=row[0], password=row[1]) for row in cur.fetchall()]
-#    print users
-    users = []
-    print len(users)
     return render_template('index.html')
 
 @app.route('/show_beers', methods=['GET', 'POST'])
@@ -101,7 +71,6 @@ def show_beers():
         beers = apiparse.get_brews(40, 40, 100)
     else:
         beers = apiparse.get_brews(location[0], location[1], 100)
-    print beers
     to_display = []
     for beer in beers:
         category, specific = beer
@@ -115,40 +84,6 @@ def add_user():
     g.db.commit()
     flash('New user created')
     return redirect(url_for('login'))
-
-"""
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    error = None
-    if request.method == "POST" and "username" in request.form:
-        username = request.form["username"]
-        password = request.form["password"]
-        print username
-        print password
-        cur = g.db.execute('select username, password from users order by id desc')
-        users = [dict(username=row[0], password=row[1]) for row in cur.fetchall()]
-        print users
-        print len(users)
-        for user in users:
-            print user['username']
-            print user['password']
-            if user['username'] == username  and user['password'] == password:
-                remember = request.form.get("remember", "no") == "yes"
-                if login_user(username, remember = remember):
-                    print("log in occurs")
-                    flash("Logged in!")
-                    return redirect(request.args.get("next") or url_for("show_users"))    
-            else:
-                print("pass failed")
-                flash("Sorry, but you could not log in.")
-                error = "Invalid pass."
-        else:
-            flash(u"Invalid username.")
-            error = "Invalid username."
-            print("invalid username")
-    return render_template("login.html", error=error)
-
-"""
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
